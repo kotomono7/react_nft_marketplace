@@ -25,18 +25,20 @@ export default function Clients() {
 
 const Section = styled.section`
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: space-evenly;
 	align-items: center;
 	margin: 5rem;
 
 	@media screen and (min-width: 280px) and (max-width: 1080px) {
+		justify-content: center;
 		margin: 3rem 2rem;
 
 		.image {
 			position: relative;
 
 			img {
-				width: 5rem;
+				width: 7rem;
 				height: auto;
 			}
 		}

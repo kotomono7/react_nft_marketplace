@@ -1,61 +1,26 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { BsThreeDots, BsFillPersonFill } from "react-icons/bs";
 import { FaEthereum } from "react-icons/fa";
 import styled from "styled-components";
-import marketplace1 from "../assets/marketplace1.png";
-import marketplace2 from "../assets/marketplace2.png";
-import marketplace3 from "../assets/marketplace3.png";
-import marketplace4 from "../assets/marketplace4.png";
-import marketplace5 from "../assets/marketplace5.png";
-import marketplace6 from "../assets/marketplace6.png";
-import marketplace7 from "../assets/marketplace7.png";
-import marketplace8 from "../assets/marketplace8.png";
-import Button from "./Button";
+import Filter from "./Filter";
+import { marketItems } from "../data/MarketSection";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Market() {
-	const marketplaceData = [
-		{
-			image: marketplace1,
-			name: "Aiboi-meta",
-		},
-		{
-			image: marketplace2,
-			name: "Pedram-moahama",
-		},
-		{
-			image: marketplace3,
-			name: "Eduardo-pena",
-		},
-		{
-			image: marketplace4,
-			name: "Daeho-cha",
-		},
-		{
-			image: marketplace5,
-			name: "Justine-florentino",
-		},
-		{
-			image: marketplace6,
-			name: "Hoang-lap-solan",
-		},
-		{
-			image: marketplace7,
-			name: "Joshua-jay",
-		},
-		{
-			image: marketplace8,
-			name: "Joshua-jay",
-		},
-	];
+	const [marketData, setMarketData] = useState([]);
+	const [filteredData, setFilteredData] = useState([]);
+	const [activeType, setActiveType] = useState("all");
 
-	const marketplaceType = [
-		"All",
-		"Art",
-		"Generic",
-		"Common",
-		"Trading",
-		"Rare",
-	];
+	const getCollection = useRef(() => {});
+
+	getCollection.current = () => {
+		setMarketData(marketItems);
+		setFilteredData(marketItems);
+	};
+
+	useEffect(() => {
+		getCollection.current();
+	}, []);
 
 	return (
 		<Section className="market">
@@ -68,33 +33,49 @@ export default function Market() {
 				</p>
 			</div>
 			<div className="marketplace-types">
-				{marketplaceType.map((text, index) => {
-					return <Button text={text} key={index} color={index === 0} />;
-				})}
+				<Filter
+					marketData={marketData}
+					setFilteredData={setFilteredData}
+					activeType={activeType}
+					setActiveType={setActiveType}
+				/>
 			</div>
-			<div className="marketplace-items">
-				{marketplaceData.map(({ image, name }, index) => {
-					return (
-						<div className="marketplace" key={index}>
-							<div className="image">
-								<img src={image} alt="marketplace" />
-							</div>
-							<div className="name">
-								<h4>{name}</h4>
-								<BsThreeDots />
-							</div>
-							<div className="creator">
-								<h5 className="username">Creator: @kotomono.tech</h5>
-								<BsFillPersonFill />
-							</div>
-							<div className="price-container">
-								<h5 className="price">7.7ETH</h5>
-								<FaEthereum />
-							</div>
-						</div>
-					);
-				})}
-			</div>
+
+			<motion.div layout="true" className="marketplace-items">
+				<AnimatePresence>
+					{filteredData.map(({ image, name, creator, price }, index) => {
+						return (
+							<motion.div
+								animate={{ opacity: 1 }}
+								initial={{ opacity: 0 }}
+								exit={{ opacity: 0 }}
+								layout="true"
+								className="marketplace"
+								key={index}
+							>
+								<motion.div layout="true" className="image">
+									<img className="nft-img" src={image} alt="marketplace" />
+									<div layout="true" className="overlay">
+										<button>Place Bid</button>
+									</div>
+								</motion.div>
+								<motion.div layout="true" className="name">
+									<motion.h4>{name}</motion.h4>
+									<BsThreeDots />
+								</motion.div>
+								<motion.div layout="true" className="creator">
+									<motion.h5 className="username">Creator: {creator}</motion.h5>
+									<BsFillPersonFill />
+								</motion.div>
+								<motion.div layout="true" className="price-container">
+									<motion.h5 className="price">{price} ETH</motion.h5>
+									<FaEthereum />
+								</motion.div>
+							</motion.div>
+						);
+					})}
+				</AnimatePresence>
+			</motion.div>
 		</Section>
 	);
 }
@@ -126,27 +107,8 @@ const Section = styled.section`
 
 	.marketplace-types {
 		display: flex;
-		gap: 1rem;
 		justify-content: center;
 		align-items: center;
-
-		button {
-			.colored {
-				border: 1px solid var(--border-white-color);
-			}
-
-			:not(.colored) {
-				background-color: transparent;
-				color: var(--primary-color);
-				border: 1px solid var(--primary-color);
-
-				&:hover {
-					color: var(--text-light-color);
-					background-color: var(--primary-color);
-					transition: all 0.5s ease-in-out;
-				}
-			}
-		}
 	}
 
 	.marketplace-items {
@@ -160,7 +122,6 @@ const Section = styled.section`
 			border-radius: 1.25rem;
 			border: 1px solid var(--border-lighter-color);
 			width: max-content;
-			cursor: pointer;
 			transition: 0.5s ease-in-out;
 
 			&:hover {
@@ -170,14 +131,52 @@ const Section = styled.section`
 			}
 
 			.image {
+				position: relative;
 				margin-bottom: 1rem;
 
-				img {
-					transition: all 0.5s ease-in-out;
-					filter: grayscale(100%);
+				.nft-img {
+					opacity: 1;
+					display: block;
+					width: 100%;
+					height: auto;
+					transition: 0.5s ease;
+					backface-visibility: hidden;
+				}
 
-					&:hover {
-						filter: grayscale(0);
+				.overlay {
+					position: absolute;
+					opacity: 0;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+					-ms-transform: translate(-50%, -50%);
+					-webkit-transform: ranslate(-50%, -50%);
+					transition: 0.5s ease;
+					text-align: center;
+
+					button {
+						border: 1px solid var(--primary-color);
+						border-radius: 3rem;
+						background: var(--bg-white-color);
+						color: var(--primary-color);
+						font-size: 16px;
+						padding: 0.8rem 2rem;
+						cursor: pointer;
+
+						&:hover {
+							color: var(--text-light-color);
+							background: var(--primary-color);
+						}
+					}
+				}
+
+				&:hover {
+					.nft-img {
+						opacity: 0.3;
+					}
+
+					.overlay {
+						opacity: 1;
 					}
 				}
 			}
@@ -214,10 +213,12 @@ const Section = styled.section`
 	}
 
 	@media screen and (min-width: 280px) and (max-width: 1080px) {
+		gap: 1.75rem;
 		margin: 3rem 2rem;
 
 		.title {
 			gap: 0.5rem;
+			margin-bottom: 0.25rem;
 
 			h2 {
 				font-size: 2rem;
@@ -227,12 +228,6 @@ const Section = styled.section`
 			p {
 				color: var(--text-content-color);
 			}
-		}
-
-		.marketplace-types {
-			flex-wrap: wrap;
-			justify-content: center;
-			align-items: center;
 		}
 
 		.marketplace-items {

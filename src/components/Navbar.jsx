@@ -142,7 +142,7 @@ const Nav = styled.nav`
 					cursor: pointer;
 					transition: 0.4s ease-in-out;
 
-					::after {
+					&::after {
 						content: "";
 						position: absolute;
 						width: 100%;
@@ -158,7 +158,7 @@ const Nav = styled.nav`
 					&:hover {
 						color: var(--primary-color);
 
-						::after {
+						&::after {
 							transform: scaleX(1);
 						}
 					}
@@ -205,7 +205,7 @@ const Nav = styled.nav`
 			svg {
 				font-size: 1.5rem;
 
-				:where(.open) {
+				&:where(.open) {
 					color: var(--pure-white-color);
 				}
 			}
@@ -235,14 +235,6 @@ const Nav = styled.nav`
 				text-align: center;
 				height: 100%;
 				justify-content: center;
-
-				li {
-					span {
-						a {
-							/* color: var(--primary-color); */
-						}
-					}
-				}
 			}
 		}
 	}

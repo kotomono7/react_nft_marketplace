@@ -1,6 +1,7 @@
 :root {
 	--primary-color: #6104fc;
 	--secondary-color: #724185;
+	--calm-green-color: #04aa6d;
 	--pure-white-color: #ffffff;
 
 	--text-darker-color: #002000;
@@ -29,6 +30,7 @@
 
 html {
 	scroll-behavior: smooth;
+	overflow-anchor: none;
 }
 
 body {

@@ -21,7 +21,7 @@ function Scroller() {
 }
 
 const Div = styled.div`
-	max-width: 100vw;
+	width: max-content;
 
 	.none {
 		opacity: 0;
@@ -38,7 +38,7 @@ const Div = styled.div`
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		transition: 0.4s ease-in-out;
+		transition: 0.5s ease-in-out;
 		z-index: 25;
 		cursor: pointer;
 

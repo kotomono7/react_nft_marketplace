@@ -64,6 +64,7 @@ const Section = styled.section`
 		opacity: 0.5;
 		border-radius: 100%;
 		filter: blur(2000px);
+		-ms-filter: blur(2000px);
 		-webkit-filter: blur(2000px);
 		position: absolute;
 		margin-top: auto;

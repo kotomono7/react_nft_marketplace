@@ -56,21 +56,18 @@ const Section = styled.section`
 		}
 
 		p {
-			color: #7b7e86;
+			color: var(--text-content-color);
 			line-height: 1.75rem;
 		}
 
 		.input-container {
 			display: flex;
-			/* gap: 1rem; */
 			justify-content: center;
 			align-items: center;
 			padding: 0.5rem;
 			margin: 0 auto;
 			margin-top: 1rem;
 			width: max-content;
-			/* border-radius: 3rem; */
-			/* border: 1px solid var(--border-lighter-color); */
 
 			input {
 				border: 1px solid var(--border-lighter-color);
